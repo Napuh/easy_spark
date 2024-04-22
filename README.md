@@ -1,39 +1,75 @@
 
-# spark
+# Easy spark 
 
-A `debian:stretch` based [Spark](http://spark.apache.org) container. Use it in a standalone cluster with the accompanying `docker-compose.yml`, or as a base for more complex recipes.
+Contenedores docker de Spark basados en debian:buster, desarrollados originalmente por [Gettyimages](https://www.github.com/gettyimages), esta versión está actualizada a Python 3.7 y Spark 3.1.2. Pensado para desplegar de forma local y sencilla.
 
-## docker example
+# Importante
 
-To run `SparkPi`, run the image with Docker:
+Spark y PySpark son muy sensibles a las versiones de las librerías que se usan. Para que funcione adecuadamente, es necesario Python `3.7`, y la versión `3.1.2` de `pyspark`.
 
-    docker run --rm -it -p 4040:4040 gettyimages/spark bin/run-example SparkPi 10
+Para crear un entorno de python rápidamente con conda:
+```bash
+conda create -y -n pyspark python=3.7
+conda activate pyspark
+pip install -r requirements.txt
+```
 
-To start `spark-shell` with your AWS credentials:
+# Despliegue en docker local
 
-    docker run --rm -it -e "AWS_ACCESS_KEY_ID=YOURKEY" -e "AWS_SECRET_ACCESS_KEY=YOURSECRET" -p 4040:4040 gettyimages/spark bin/spark-shell
+Primero, instalar docker-compose, si no viene por defecto en tu instalación de docker:
 
-To do a thing with Pyspark
+```bash
+sudo apt install docker-compose
+```
 
-    echo -e "import pyspark\n\nprint(pyspark.SparkContext().parallelize(range(0, 10)).count())" > count.py
-    docker run --rm -it -p 4040:4040 -v $(pwd)/count.py:/count.py gettyimages/spark bin/spark-submit /count.py
+Después, arrancar todos los servicios con:
 
-## docker-compose example
+```bash
+docker-compose up
+```
 
-To create a simplistic standalone cluster with [docker-compose](http://docs.docker.com/compose):
+Para arrancar los servicios en background:
 
-    docker-compose up
+```bash
+docker-compose up -d
+```
 
-The SparkUI will be running at `http://${YOUR_DOCKER_HOST}:8080` with one worker listed. To run `pyspark`, exec into a container:
+Para pararlo todo, CTRL+C, o:
 
-    docker exec -it docker-spark_master_1 /bin/bash
-    bin/pyspark
+```bash
+docker-compose down
+```
 
-To run `SparkPi`, exec into a container:
+# Interfaz de Spark master
 
-    docker exec -it docker-spark_master_1 /bin/bash
-    bin/run-example SparkPi 10
+Podemos ver la interfaz del nodo maestro de spark en [http://localhost:8080](http://localhost:8080).
 
-## license
+Deberían aparecer tres workers con state `ALIVE`.
+
+# Lanzar tareas de ejemplo en el cluster de spark creado
+
+Entramos en el contenedor con `bash`:
+
+```bash
+docker exec -it docker-spark_master_1 /bin/bash
+```
+
+Una vez dentro, para lanzar un trabajo de ejemplo:
+
+```bash
+bin/run-example SparkPi 10
+```
+
+Mientras se completa, podremos ver en la interfaz web del nodo maestro la aplicación en curso. Cuando finalice, aparecerá en la lista de aplicaciones completadas.
+
+# Conexión con PySpark
+
+En `pyspark_example.py` se encuentra un ejemplo de cómo conectarse al cluster y crear un dataframe. Con el entorno de python `3.7` activado, ejecutar:
+
+```bash
+python pyspark_example.py
+```
+
+## License
 
 MIT
