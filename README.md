@@ -1,15 +1,17 @@
 
 # Easy spark 
 
-Contenedores docker de Spark basados en debian:buster, desarrollados originalmente por [Gettyimages](https://www.github.com/gettyimages), esta versión está actualizada a Python 3.7 y Spark 3.1.2. Pensado para desplegar de forma local y sencilla.
+Contenedores docker de Spark basados en debian:buster, desarrollados originalmente por [Gettyimages](https://www.github.com/gettyimages).
+Esta versión está actualizada a Python 3.10 y Spark 3.4.4. Pensado para desplegar de forma local y sencilla en un entorno de desarrollo.
 
 # Importante
 
-Spark y PySpark son muy sensibles a las versiones de las librerías que se usan. Para que funcione adecuadamente, es necesario Python `3.7`, y la versión `3.1.2` de `pyspark`.
+Spark y PySpark son muy sensibles a las versiones de las librerías que se usan. 
+Para que funcione adecuadamente, es necesario Python `3.10`, y la versión `3.4.4` de `pyspark`.
 
 Para crear un entorno de python rápidamente con conda:
 ```bash
-conda create -y -n pyspark python=3.7
+conda create -y -n pyspark python=3.10
 conda activate pyspark
 pip install -r requirements.txt
 ```
@@ -34,7 +36,7 @@ Para arrancar los servicios en background:
 docker-compose up -d
 ```
 
-Para pararlo todo, CTRL+C, o:
+Para pararlo todo:
 
 ```bash
 docker-compose down
